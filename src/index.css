@@ -1,0 +1,80 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto Condensed:wght@300;400;600;700&display=swap");
+
+
+:root {
+  /* Colors */
+  --color-primary: #5ece7b;
+  --color-secondary: #1d1f22;
+  --color-text: #1d1f22;
+  --color-background: #ffffff;
+
+  /* Font Raleway */
+  --font-family: "Raleway", sans-serif;
+  --font-weight-extra-bold: 700;
+  --font-weight-bold: 600;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --font-weight-light: 300;
+  --font-size-base: 16px;
+  --font-size-small: 14px;
+
+  /* Font Roboto */
+  --font-family-roboto: "Roboto", sans-serif;
+  --font-weight-roboto-extra-bold: 700;
+  --font-weight-roboto-bold: 600;
+  --font-weight-roboto-medium: 500;
+  --font-weight-roboto-normal: 400;
+  --font-weight-roboto-light: 300;
+  --font-size-roboto-base: 16px;
+
+  /* Font Roboto Condensed */
+  --font-family-roboto-condensed: "Roboto Condensed", sans-serif;
+  --font-weight-roboto-condensed-extra-bold: 700;
+  --font-weight-roboto-condensed-bold: 600;
+  --font-weight-roboto-condensed-normal: 400;
+  --font-weight-roboto-condensed-light: 300;
+  --font-size-roboto-condensed-base: 18px;
+
+
+
+  /* Line Heights */
+  --line-height-base: 160%;
+  --line-height-small: 120%;
+  --line-height-large: 180%;
+}
+
+/* Utility Classes */
+.uppercase {
+  text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.vertical-middle {
+  vertical-align: middle;
+}
+
+/* Small screens (mobile) */
+@media (max-width: 600px) {
+  :root {
+    --font-size-base: 14px;
+  }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  :root {
+    --font-size-base: 16px;
+  }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 1025px) {
+  :root {
+    --font-size-base: 18px;
+  }
+}
