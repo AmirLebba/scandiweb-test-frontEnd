@@ -17,7 +17,31 @@ body {
   margin: 0 auto;
   min-height: 100vh;
   background: #f8f9fa;
-  padding: 20px;
+  .overlay {
+    position: fixed;
+    top: 80px; 
+    left: 0;
+    width: 100%;
+    height: 100%; 
+    background-color: #39374838 ;
+    opacity: 88%; 
+    z-index: 1;
+  }
+  h1{
+    font-size: 42px;
+    font-family: var(--font-family);
+    font-weight: var(--font-weight-normal);
+    line-height: var( --line-height-base);
+    padding-left: 15px;
+    margin-top: 20px;
+    max-width: 150px;
+    max-height: 68px;
+  }
+  
+}
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
 }
 
 .products-grid {

@@ -27,7 +27,11 @@ export interface Product {
 
 export interface ProductGridItemProps {
   product: Product;
+  isInCart: boolean;
+  onAddToCart: (product: Product, selectedAttributes: { [key: string]: string }) => void;
 }
+
+
 
 export default interface NavbarProps {
   selectedCategory: number;

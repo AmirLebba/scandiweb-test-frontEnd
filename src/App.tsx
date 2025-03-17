@@ -10,8 +10,15 @@ import { Product } from "@interfaces/interfaces";
 
 import "@styles/App.scss";
 
+
+const categories = [
+  { id: 1, name: "All" },
+  { id: 2, name: "Clothes" },
+  { id: 3, name: "Tech" },
+];
+
 export default function App() {
-  const [selectedCategory, setSelectedCategory] = useState<number>(0);
+  const [selectedCategory, setSelectedCategory] = useState<number>(1); // ✅ First category active by default
   const [cart, setCart] = useState<
     {
       product: Product;
@@ -19,6 +26,7 @@ export default function App() {
       quantity: number;
     }[]
   >([]);
+  const [cartOpen, setCartOpen] = useState(false);
 
   // ✅ Handle Add to Cart
   const handleAddToCart = (
@@ -34,31 +42,16 @@ export default function App() {
       );
 
       if (existingItemIndex !== -1) {
-        // If item exists, increase quantity
         const updatedCart = [...prevCart];
         updatedCart[existingItemIndex].quantity += 1;
         return updatedCart;
       }
 
-      // Otherwise, add new item
       return [...prevCart, { product, selectedAttributes, quantity: 1 }];
     });
   };
 
   // ✅ Update Cart Attributes
-  const updateCart = (
-    index: number,
-    newAttributes: { [key: string]: string }
-  ) => {
-    setCart((prevCart) => {
-      const updatedCart = [...prevCart];
-      updatedCart[index] = {
-        ...updatedCart[index],
-        selectedAttributes: newAttributes,
-      };
-      return updatedCart;
-    });
-  };
 
   // ✅ Update Quantity
   const updateQuantity = (index: number, change: number) => {
@@ -67,29 +60,37 @@ export default function App() {
       updatedCart[index].quantity = Math.max(
         1,
         updatedCart[index].quantity + change
-      ); // Ensure min quantity = 1
+      );
       return updatedCart;
     });
   };
 
   // Fetch Products
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    variables: selectedCategory === 0 ? {} : { categoryId: selectedCategory },
+    variables: selectedCategory === 1 ? {} : { categoryId: selectedCategory },
   });
 
   return (
     <Router>
       <div className="app">
-        <Navbar
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          cart={cart}
-          updateCart={updateCart}
-          updateQuantity={updateQuantity} // ✅ Pass updateQuantity function
-        />
+        {/* ✅ Clicking anywhere on header closes cart */}
+        <header onClick={() => setCartOpen(false)}>
+          <Navbar
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            cart={cart}
+            updateQuantity={updateQuantity}
+            setCartOpen={setCartOpen}
+            cartOpen={cartOpen}
+          />
+        </header>
 
+        <h1>
+          {categories.find((cat) => cat.id === selectedCategory)?.name || "All"}
+        </h1>
+
+        {/* ✅ Routes */}
         <Routes>
-          {/* Home Page - Product Grid */}
           <Route
             path="/"
             element={
@@ -97,18 +98,28 @@ export default function App() {
                 {loading && <p>Loading products...</p>}
                 {error && <p>Error loading products</p>}
                 {data?.products?.map((product: Product) => (
-                  <ProductGridItem key={product.id} product={product} />
+                  <ProductGridItem
+                    key={product.id}
+                    product={product}
+                    isInCart={cart.some(
+                      (item) => item.product.id === product.id
+                    )}
+                    onAddToCart={handleAddToCart}
+                  />
                 ))}
               </div>
             }
           />
-
-          {/* Product Details Page */}
           <Route
             path="/product/:id"
             element={<ProductPage onAddToCart={handleAddToCart} />}
           />
         </Routes>
+
+        {/* ✅ Overlay that grays out background */}
+        {cartOpen && (
+          <div className="overlay" onClick={() => setCartOpen(false)}></div>
+        )}
       </div>
     </Router>
   );

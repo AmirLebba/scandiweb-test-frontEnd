@@ -1,6 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto Condensed:wght@300;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source Sans Pro:wght@300;400;600;700&display=swap");
+
+
 
 
 :root {
@@ -9,6 +12,7 @@
   --color-secondary: #1d1f22;
   --color-text: #1d1f22;
   --color-background: #ffffff;
+  --out-of-stock: #C4C4C4;
 
   /* Font Raleway */
   --font-family: "Raleway", sans-serif;
@@ -36,6 +40,14 @@
   --font-weight-roboto-condensed-normal: 400;
   --font-weight-roboto-condensed-light: 300;
   --font-size-roboto-condensed-base: 18px;
+
+  /* Font Source Sans Pro */
+  --font-family-source-sans-pro: "Source Sans Pro", sans-serif;
+  --font-weight-source-sans-pro-extra-bold: 700;
+  --font-weight-source-sans-pro-bold: 600;
+  --font-weight-source-sans-pro-medium: 500;
+  --font-weight-source-sans-pro-normal: 400;
+  --font-weight-source-sans-pro-light: 300;
 
 
 

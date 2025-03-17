@@ -98,35 +98,51 @@ export default function ProductPage({ onAddToCart }: ProductPageProps) {
       <div className="product-details">
         <h2>{product.name}</h2>
         {product.attributes.map((attribute: Attribute) => (
-          <div key={attribute.name} className="attribute-group">
+          <div
+            key={attribute.name}
+            data-testid={`product-${attribute.name}`}
+            className="attribute-group"
+          >
             <h4>{attribute.name}:</h4>
             <div className="attribute-options">
               {attribute.items.map((item) => (
                 <button
                   key={item.id}
-                  className={
-                    
+                  className={`attribute-option ${
                     selectedAttributes[attribute.name] === item.value
                       ? "selected"
                       : ""
+                  }`}
+                  style={
+                    attribute.type === "swatch"
+                      ? {
+                          backgroundColor: item.value,
+                        }
+                      : {}
                   }
                   onClick={() =>
                     handleAttributeSelect(attribute.name, item.value)
                   }
                 >
-                  {item.displayValue}
+                  {attribute.type !== "swatch" ? item.displayValue : ""}
                 </button>
               ))}
             </div>
           </div>
         ))}
-        <p>
-          Price: {product.prices[0].currency.symbol}
-          {product.prices[0].amount.toFixed(2)}
-        </p>
+        <div className="price">
+          <h4>Price: </h4>
+          <p>
+            {product.prices[0].currency.symbol}
+            {product.prices[0].amount.toFixed(2)}
+          </p>
+          
+        </div>
+
         <button
+          data-testid="add-to-cart"
           className="add-to-cart-button"
-          disabled={!isAllAttributesSelected}
+          disabled={!isAllAttributesSelected || !product.inStock}
           onClick={() => onAddToCart(product, selectedAttributes)}
         >
           Add to Cart
