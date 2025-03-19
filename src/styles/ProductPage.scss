@@ -6,8 +6,8 @@
   border-radius: 10px;
   margin-top: 20px;
   align-items: center;
-
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .product-gallery {
@@ -92,14 +92,12 @@
       gap: 10px;
 
       .attribute-option {
-       
         border: 1px solid #ccc;
         cursor: pointer;
         background: white;
         transition: all 0.3s ease;
 
         &.selected {
-          
           background-color: black;
           color: white;
         }
@@ -109,11 +107,10 @@
       .attribute-option[style*="background-color"] {
         width: 32px;
         height: 32px;
-        
-        
+
         padding: 0;
         &.selected {
-          border: 2px solid var(--color-secondary); 
+          border: 2px solid var(--color-secondary);
         }
       }
 
@@ -189,4 +186,21 @@
     padding: 5px 10px;
     cursor: pointer;
   }
+}
+
+
+@media screen and (max-width: 700px) {
+
+  .product-gallery {
+  .gallery-thumbnails {
+    display: none;
+
+  }
+  .gallery-main {
+    img {
+      width: 100%;
+      max-height: 300px;
+    }
+  }
+}
 }

@@ -1,24 +1,17 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
 import Navbar from "@components/Header/Navbar";
 import { ProductGridItem } from "@components/Body/ProductGridItem";
 import ProductPage from "@components/Body/ProductPage";
-import { GET_PRODUCTS } from "@graphql/queries";
-import { Product } from "@interfaces/interfaces";
+import { GET_CATEGORIES } from "@graphql/queries";
+import { Category, Product } from "@interfaces/interfaces";
 
 import "@styles/App.scss";
 
-
-const categories = [
-  { id: 1, name: "All" },
-  { id: 2, name: "Clothes" },
-  { id: 3, name: "Tech" },
-];
-
 export default function App() {
-  const [selectedCategory, setSelectedCategory] = useState<number>(1); // ✅ First category active by default
+  const [selectedCategory, setSelectedCategory] = useState<number>(1);
   const [cart, setCart] = useState<
     {
       product: Product;
@@ -28,7 +21,26 @@ export default function App() {
   >([]);
   const [cartOpen, setCartOpen] = useState(false);
 
-  // ✅ Handle Add to Cart
+  // Fetch Categories (Only Once)
+  const {
+    loading: categoriesLoading,
+    error: categoriesError,
+    data: categoriesData,
+  } = useQuery(GET_CATEGORIES);
+
+  // Memoize categories to prevent unnecessary re-renders
+  const categories: Category[] = useMemo(
+    () => categoriesData?.categories || [],
+    [categoriesData]
+  );
+
+  // Memoize active category name
+  const activeCategoryName = useMemo(
+    () => categories.find((cat) => cat.id === selectedCategory)?.name || "All",
+    [categories, selectedCategory]
+  );
+
+  // Handle Add to Cart
   const handleAddToCart = (
     product: Product,
     selectedAttributes: { [key: string]: string }
@@ -51,72 +63,198 @@ export default function App() {
     });
   };
 
-  // ✅ Update Cart Attributes
-
-  // ✅ Update Quantity
+  // Update Quantity
   const updateQuantity = (index: number, change: number) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart];
-      updatedCart[index].quantity = Math.max(
-        1,
-        updatedCart[index].quantity + change
-      );
+
+      // ✅ Decrease quantity
+      updatedCart[index].quantity += change;
+
+      // ✅ Remove item if quantity is 0
+      if (updatedCart[index].quantity <= 0) {
+        updatedCart.splice(index, 1); // Remove the item from cart
+      }
+
       return updatedCart;
     });
   };
 
-  // Fetch Products
-  const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    variables: selectedCategory === 1 ? {} : { categoryId: selectedCategory },
-  });
+  // Handle Loading & Errors for Categories
+  if (categoriesLoading)
+    return (
+      <p className="loading">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+        >
+          <g
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          >
+            <path
+              stroke-dasharray="16"
+              stroke-dashoffset="16"
+              d="M12 3c4.97 0 9 4.03 9 9"
+            >
+              <animate
+                fill="freeze"
+                attributeName="stroke-dashoffset"
+                dur="0.3s"
+                values="16;0"
+              />
+              <animateTransform
+                attributeName="transform"
+                dur="1.5s"
+                repeatCount="indefinite"
+                type="rotate"
+                values="0 12 12;360 12 12"
+              />
+            </path>
+            <path
+              stroke-dasharray="64"
+              stroke-dashoffset="64"
+              stroke-opacity="0.3"
+              d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+            >
+              <animate
+                fill="freeze"
+                attributeName="stroke-dashoffset"
+                dur="1.2s"
+                values="64;0"
+              />
+            </path>
+          </g>
+        </svg>
+      </p>
+    );
+  if (categoriesError)
+    return (
+      <p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+        >
+          <g
+            fill="currentColor"
+            fill-opacity="0"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+          >
+            <path
+              stroke-dasharray="64"
+              stroke-dashoffset="64"
+              d="M12 3l9 17h-18l9 -17Z"
+            >
+              <animate
+                fill="freeze"
+                attributeName="stroke-dashoffset"
+                dur="0.6s"
+                values="64;0"
+              />
+            </path>
+            <path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10v4">
+              <animate
+                fill="freeze"
+                attributeName="stroke-dashoffset"
+                begin="0.6s"
+                dur="0.2s"
+                values="6;0"
+              />
+              <animate
+                attributeName="stroke-width"
+                begin="1.95s"
+                dur="3s"
+                keyTimes="0;0.1;0.2;0.3;1"
+                repeatCount="indefinite"
+                values="2;3;3;2;2"
+              />
+            </path>
+            <path stroke-dasharray="2" stroke-dashoffset="2" d="M12 17v0.01">
+              <animate
+                fill="freeze"
+                attributeName="stroke-dashoffset"
+                begin="0.8s"
+                dur="0.2s"
+                values="2;0"
+              />
+              <animate
+                attributeName="stroke-width"
+                begin="2.25s"
+                dur="3s"
+                keyTimes="0;0.1;0.2;0.3;1"
+                repeatCount="indefinite"
+                values="2;3;3;2;2"
+              />
+            </path>
+            <animate
+              fill="freeze"
+              attributeName="fill-opacity"
+              begin="1.1s"
+              dur="0.15s"
+              values="0;0.3"
+            />
+          </g>
+        </svg>{" "}
+        {categoriesError.message}
+      </p>
+    );
 
   return (
     <Router>
       <div className="app">
-        {/* ✅ Clicking anywhere on header closes cart */}
         <header onClick={() => setCartOpen(false)}>
           <Navbar
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             cart={cart}
+            setCart={setCart}
             updateQuantity={updateQuantity}
             setCartOpen={setCartOpen}
             cartOpen={cartOpen}
+            categories={categories}
           />
         </header>
-
-        <h1>
-          {categories.find((cat) => cat.id === selectedCategory)?.name || "All"}
-        </h1>
-
-        {/* ✅ Routes */}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="products-grid">
-                {loading && <p>Loading products...</p>}
-                {error && <p>Error loading products</p>}
-                {data?.products?.map((product: Product) => (
-                  <ProductGridItem
-                    key={product.id}
-                    product={product}
-                    isInCart={cart.some(
-                      (item) => item.product.id === product.id
-                    )}
-                    onAddToCart={handleAddToCart}
-                  />
-                ))}
-              </div>
-            }
-          />
-          <Route
-            path="/product/:id"
-            element={<ProductPage onAddToCart={handleAddToCart} />}
-          />
-        </Routes>
-
-        {/* ✅ Overlay that grays out background */}
+        <main>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <h1>{activeCategoryName}</h1>
+                  <div className="products-grid">
+                    <ProductGridItem
+                      selectedCategory={selectedCategory}
+                      isInCart={(productId: string) =>
+                        cart.some((item) => item.product.id === productId)
+                      }
+                      onAddToCart={handleAddToCart}
+                      setCartOpen={setCartOpen}
+                    />
+                  </div>
+                </>
+              }
+            />
+            <Route
+              path="/product/:id"
+              element={
+                <ProductPage
+                  onAddToCart={handleAddToCart}
+                  setCartOpen={setCartOpen}
+                />
+              }
+            />
+          </Routes>
+        </main>
         {cartOpen && (
           <div className="overlay" onClick={() => setCartOpen(false)}></div>
         )}

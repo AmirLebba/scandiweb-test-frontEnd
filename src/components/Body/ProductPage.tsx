@@ -10,9 +10,10 @@ interface ProductPageProps {
     product: Product,
     selectedAttributes: { [key: string]: string }
   ) => void;
+  setCartOpen: (state: boolean) => void; 
 }
 
-export default function ProductPage({ onAddToCart }: ProductPageProps) {
+export default function ProductPage({ onAddToCart, setCartOpen }: ProductPageProps ) {
   const { id } = useParams<{ id: string }>();
 
   // Fetch product data
@@ -136,17 +137,20 @@ export default function ProductPage({ onAddToCart }: ProductPageProps) {
             {product.prices[0].currency.symbol}
             {product.prices[0].amount.toFixed(2)}
           </p>
-          
         </div>
 
         <button
           data-testid="add-to-cart"
           className="add-to-cart-button"
           disabled={!isAllAttributesSelected || !product.inStock}
-          onClick={() => onAddToCart(product, selectedAttributes)}
+          onClick={() => {
+            onAddToCart(product, selectedAttributes);
+            setCartOpen(true); // ✅ Open the cart after adding an item
+          }}
         >
           Add to Cart
         </button>
+
         {/* ✅ Product Description */}
         <div className="product-description" data-testid="product-description">
           {product.description

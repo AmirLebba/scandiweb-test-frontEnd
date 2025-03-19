@@ -1,38 +1,54 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import NavbarProps from "@interfaces/interfaces";
 import Logo from "@components/Header/Logo";
-import { Product } from "@interfaces/interfaces";
 
+import { useMutation } from "@apollo/client";
+import { PLACE_ORDER } from "@graphql/mutations";
 import "@styles/Navbar.scss";
-
-interface NavbarProps {
-  selectedCategory: number;
-  setSelectedCategory: (id: number) => void;
-  cart: {
-    product: Product;
-    selectedAttributes: { [key: string]: string };
-    quantity: number;
-  }[];
-  updateQuantity: (index: number, change: number) => void;
-  setCartOpen: (state: boolean) => void;
-  cartOpen: boolean;
-}
-
-const categories = [
-  { id: 1, name: "All" },
-  { id: 2, name: "Clothes" },
-  { id: 3, name: "Tech" },
-];
 
 export default function Navbar({
   selectedCategory,
   setSelectedCategory,
   cart,
+  setCart,
   setCartOpen,
   cartOpen,
-
   updateQuantity,
+  categories,
 }: NavbarProps) {
+  //   GraphQL Mutation Hook
+  const [placeOrder, { loading, error }] = useMutation(PLACE_ORDER);
+
+  const navigate = useNavigate();
+
+
+const handlePlaceOrder = async () => {
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const items = cart.map((item) => item.product.id); // Extract product IDs
+
+  try {
+    const { data } = await placeOrder({ variables: { items } });
+
+    if (data?.placeOrder?.success) {
+      alert("Order placed successfully!");
+      setCart([]); // ✅ Clear cart after order
+      setCartOpen(false); // ✅ Close cart after order
+    } else {
+      alert("Failed to place order: " + data?.placeOrder?.message);
+    }
+  } catch {
+    alert("Error placing order. Please try again.");
+  }
+};
+
+
   useEffect(() => {
     if (cartOpen) {
       document.body.classList.add("no-scroll");
@@ -48,7 +64,7 @@ export default function Navbar({
   return (
     <nav className="navbar">
       <label className="navigation">
-        {categories.map((cat) => (
+        {categories.map((cat: { id: number; name: string }) => (
           <button
             key={cat.id}
             data-testid={
@@ -57,7 +73,10 @@ export default function Navbar({
                 : "category-link"
             }
             className={selectedCategory === cat.id ? "active" : ""}
-            onClick={() => setSelectedCategory(cat.id)}
+            onClick={() => {
+              setSelectedCategory(cat.id);
+              navigate("/");
+            }}
           >
             {cat.name}
           </button>
@@ -73,7 +92,7 @@ export default function Navbar({
           data-testid="cart-btn"
           className="cart-icon"
           onClick={(e) => {
-            e.stopPropagation(); // ✅ Prevents closing when clicking cart button
+            e.stopPropagation();
             setCartOpen(!cartOpen);
           }}
         >
@@ -119,7 +138,6 @@ export default function Navbar({
                         {item.product.prices[0].amount.toFixed(2)}
                       </p>
 
-                      {/* ✅ Ensure unique attribute values */}
                       {item.product.attributes.map((attr) => {
                         const uniqueItems = Array.from(
                           new Map(
@@ -174,7 +192,6 @@ export default function Navbar({
                       })}
                     </div>
 
-                    {/* ✅ Quantity Controls */}
                     <div className="cart-item-quantity">
                       <button
                         onClick={() => updateQuantity(index, 1)}
@@ -202,22 +219,30 @@ export default function Navbar({
                   </div>
                 ))
               )}
-
-              {/* ✅ Display Total Price */}
-              <div className="total" data-testid="cart-total">
-                <span>Total </span>
-                <span id="amount" className="amount">
-                  $
-                  {cart
-                    .reduce(
-                      (total, item) =>
-                        total + item.product.prices[0].amount * item.quantity,
-                      0
-                    )
-                    .toFixed(2)}
-                </span>
+              <div className="cart-footer">
+                <div className="total" data-testid="cart-total">
+                  <span>Total </span>
+                  <span id="amount" className="amount">
+                    $
+                    {cart
+                      .reduce(
+                        (total, item) =>
+                          total + item.product.prices[0].amount * item.quantity,
+                        0
+                      )
+                      .toFixed(2)}
+                  </span>
+                </div>
+                {/* ✅ Place Order Button */}
+                <button
+                  className="place-order"
+                  onClick={handlePlaceOrder}
+                  disabled={loading}
+                >
+                  {loading ? "Placing Order..." : "Place Order"}
+                </button>
+                {error && <p className="error">Error: {error.message}</p>}
               </div>
-              <button className="place-order">Place Order</button>
             </div>
           </>
         )}

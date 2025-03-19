@@ -26,24 +26,52 @@ export interface Product {
 }
 
 export interface ProductGridItemProps {
-  product: Product;
-  isInCart: boolean;
-  onAddToCart: (product: Product, selectedAttributes: { [key: string]: string }) => void;
+  selectedCategory: number;
+  setCartOpen: (state: boolean) => void;
+
+  isInCart: (productId: string) => boolean;
+  onAddToCart: (
+    product: Product,
+    selectedAttributes: { [key: string]: string }
+  ) => void;
 }
-
-
 
 export default interface NavbarProps {
   selectedCategory: number;
   setSelectedCategory: (id: number) => void;
   cart: {
-    product: { id: string; name: string; prices: { amount: number; currency: { symbol: string } }[] };
+    product: Product;
     selectedAttributes: { [key: string]: string };
+    quantity: number;
   }[];
+  setCart: React.Dispatch<
+    React.SetStateAction<
+      {
+        product: Product;
+        selectedAttributes: { [key: string]: string };
+        quantity: number;
+      }[]
+    >
+  >; // ✅ Add setCart type
+  updateQuantity: (index: number, change: number) => void;
+  setCartOpen: (state: boolean) => void;
+  cartOpen: boolean;
+  categories: { id: number; name: string }[];
 }
 
 export interface ProductPageProps {
-  onAddToCart: (product: Product, selectedAttributes: { [key: string]: string }) => void;
-} 
+  product: Product;
+  selectedAttributes: { [key: string]: string };
+  isAllAttributesSelected: boolean;
+  handleAttributeSelect: (name: string, value: string) => void;
+  onAddToCart: (
+    product: Product,
+    selectedAttributes: { [key: string]: string }
+  ) => void;
+}
 
-
+export interface Category {
+  id: number;
+  name: string;
+  products: string[]; // Array of product IDs
+}

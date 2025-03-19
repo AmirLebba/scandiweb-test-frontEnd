@@ -57,3 +57,14 @@ export const GET_PRODUCT = gql`
     }
   }
 `;
+
+export const GET_CATEGORIES = gql`
+  query GetCategories {
+    categories {
+      id
+      name
+    }   
+  }
+`;
+
+

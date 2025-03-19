@@ -11,6 +11,7 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components'),
       '@styles': path.resolve(__dirname, './src/styles'),
       '@graphql': path.resolve(__dirname, './src/graphql'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
     },
   },
 })

@@ -4,7 +4,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-
 }
 
 body {
@@ -15,29 +14,34 @@ body {
 .app {
   max-width: 1440px;
   margin: 0 auto;
+  padding: 0 20px;
   min-height: 100vh;
   background: #f8f9fa;
+  
+  main{
+    margin-top: 100px;
+  }
   .overlay {
     position: fixed;
-    top: 80px; 
+    top: 80px;
     left: 0;
     width: 100%;
-    height: 100%; 
-    background-color: #39374838 ;
-    opacity: 88%; 
+    height: 100%;
+    background-color: #39374838;
+    opacity: 88%;
     z-index: 1;
   }
-  h1{
+  h1 {
     font-size: 42px;
     font-family: var(--font-family);
     font-weight: var(--font-weight-normal);
-    line-height: var( --line-height-base);
+    line-height: var(--line-height-base);
     padding-left: 15px;
     margin-top: 20px;
+    margin-left: 20px;
     max-width: 150px;
     max-height: 68px;
   }
-  
 }
 .no-scroll {
   overflow: hidden;
@@ -49,6 +53,18 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(386px, 1fr));
   gap: 20px;
   margin-top: 20px;
+  justify-items: center;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-base);
 }
 
 /* Adjust grid for smaller screens */

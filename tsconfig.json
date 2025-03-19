@@ -10,7 +10,8 @@
       "@components/*": ["components/*"],
       "@graphql/*": ["graphql/*"],
       "@interfaces/*": ["interfaces/interfaces.ts"],
-      "@styles/*": ["styles/*"]
+      "@styles/*": ["styles/*"],
+      "@hooks/*": ["hooks/*"],
     }
   }
 }
