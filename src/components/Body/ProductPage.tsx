@@ -1,44 +1,64 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import "@styles/ProductPage.scss";
+
 import { GET_PRODUCT } from "@graphql/queries";
-import {  Attribute,ProductPageProps } from "@interfaces/interfaces";
+import { Attribute } from "@interfaces/interfaces";
+import { useAppContext } from "@hooks/useAppContext";
 
-
-
-export default function ProductPage({ onAddToCart, setCartOpen }: ProductPageProps ) {
+export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
+  const { addToCart } = useAppContext();
 
-  // Fetch product data
   const { loading, error, data } = useQuery(GET_PRODUCT, { variables: { id } });
 
-  // State for selected image and attributes
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [selectedAttributes, setSelectedAttributes] = useState<
     Record<string, string>
   >({});
 
-  // Set the initial selected image when data is loaded
-  if (data?.product && !selectedImage) {
-    setSelectedImage(data.product.gallery[0]);
-  }
+  useEffect(() => {
+    if (data?.product?.gallery?.length) {
+      setSelectedImage(data.product.gallery[0]);
+    }
+  }, [data]);
 
-  // Handle attribute selection
-  const handleAttributeSelect = (attributeName: string, value: string) => {
-    setSelectedAttributes((prev) => ({
-      ...prev,
-      [attributeName]: value,
-    }));
+  const isAllAttributesSelected = useMemo(
+    () =>
+      data?.product?.attributes.every(
+        (attribute: Attribute) => selectedAttributes[attribute.name]
+      ) ?? false,
+    [data, selectedAttributes]
+  );
+
+  const handleAttributeSelect = useCallback(
+    (attributeName: string, value: string) => {
+      setSelectedAttributes((prev) => ({
+        ...prev,
+        [attributeName]: value,
+      }));
+    },
+    []
+  );
+
+  const handleNextImage = () => {
+    const currentIndex = data.product.gallery.indexOf(selectedImage);
+    setSelectedImage(
+      data.product.gallery[(currentIndex + 1) % data.product.gallery.length]
+    );
   };
 
-  // Check if all attributes are selected
-  const isAllAttributesSelected =
-    data?.product?.attributes.every(
-      (attribute: Attribute) => selectedAttributes[attribute.name]
-    ) ?? false;
+  const handlePrevImage = () => {
+    const currentIndex = data.product.gallery.indexOf(selectedImage);
+    setSelectedImage(
+      data.product.gallery[
+        (currentIndex - 1 + data.product.gallery.length) %
+          data.product.gallery.length
+      ]
+    );
+  };
 
-  // Loading and error states
   if (loading) return <p>Loading...</p>;
   if (error || !data?.product) return <p>Error loading product</p>;
 
@@ -46,7 +66,6 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
 
   return (
     <div className="product-modal">
-      {/*  Product Gallery */}
       <div className="product-gallery" data-testid="product-gallery">
         <div className="gallery-thumbnails">
           {product.gallery.map((image: string, index: number) => (
@@ -60,43 +79,23 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
           ))}
         </div>
         <div className="gallery-main">
-          <button
-            className="prev"
-            onClick={() => {
-              const currentIndex = product.gallery.indexOf(selectedImage);
-              setSelectedImage(
-                product.gallery[
-                  (currentIndex - 1 + product.gallery.length) %
-                    product.gallery.length
-                ]
-              );
-            }}
-          >
+          <button className="prev" onClick={handlePrevImage}>
             ❮
           </button>
           <img src={selectedImage} alt={product.name} />
-          <button
-            className="next"
-            onClick={() => {
-              const currentIndex = product.gallery.indexOf(selectedImage);
-              setSelectedImage(
-                product.gallery[(currentIndex + 1) % product.gallery.length]
-              );
-            }}
-          >
+          <button className="next" onClick={handleNextImage}>
             ❯
           </button>
         </div>
       </div>
 
-      {/*  Product Details */}
       <div className="product-details">
         <h2>{product.name}</h2>
         {product.attributes.map((attribute: Attribute) => (
           <div
             key={attribute.name}
-            data-testid={`product-${attribute.name}`}
             className="attribute-group"
+            data-testid={`product-${attribute.name}`}
           >
             <h4>{attribute.name}:</h4>
             <div className="attribute-options">
@@ -110,9 +109,7 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
                   }`}
                   style={
                     attribute.type === "swatch"
-                      ? {
-                          backgroundColor: item.value,
-                        }
+                      ? { backgroundColor: item.value }
                       : {}
                   }
                   onClick={() =>
@@ -125,6 +122,7 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
             </div>
           </div>
         ))}
+
         <div className="price">
           <h4>Price: </h4>
           <p>
@@ -137,15 +135,11 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
           data-testid="add-to-cart"
           className="add-to-cart-button"
           disabled={!isAllAttributesSelected || !product.inStock}
-          onClick={() => {
-            onAddToCart(product, selectedAttributes);
-            setCartOpen(true); //  Open the cart after adding an item
-          }}
+          onClick={() => addToCart(product, selectedAttributes)}
         >
           Add to Cart
         </button>
 
-        {/*  Product Description */}
         <div className="product-description" data-testid="product-description">
           {product.description
             .split("\n")

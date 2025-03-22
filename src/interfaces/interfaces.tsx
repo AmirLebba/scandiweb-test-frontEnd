@@ -52,7 +52,7 @@ export default interface NavbarProps {
         quantity: number;
       }[]
     >
-  >; // ✅ Add setCart type
+  >; 
   updateQuantity: (index: number, change: number) => void;
   setCartOpen: (state: boolean) => void;
   cartOpen: boolean;
@@ -70,5 +70,5 @@ export interface ProductPageProps {
 export interface Category {
   id: number;
   name: string;
-  products: string[]; // Array of product IDs
+  products: string[]; 
 }

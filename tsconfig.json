@@ -12,6 +12,9 @@
       "@interfaces/*": ["interfaces/interfaces.ts"],
       "@styles/*": ["styles/*"],
       "@hooks/*": ["hooks/*"],
+      "@context/*": ["context/*"],
+      "@SVGs/*": ["SVGs/*"],
+      "@api/*": ["api/*"],
     }
   }
 }

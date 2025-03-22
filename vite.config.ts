@@ -12,6 +12,9 @@ export default defineConfig({
       '@styles': path.resolve(__dirname, './src/styles'),
       '@graphql': path.resolve(__dirname, './src/graphql'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@context': path.resolve(__dirname, './src/context'),
+      '@SVGs': path.resolve(__dirname, './src/SVGs'),
+      '@api': path.resolve(__dirname, './src/api'),
     },
   },
 })

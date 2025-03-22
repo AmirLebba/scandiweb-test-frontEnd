@@ -1,0 +1,12 @@
+// src/hooks/useAppContext.ts (NEW FILE)
+import { useContext } from "react";
+import { AppContext, AppContextType } from "@context/AppContext";
+
+
+export function useAppContext(): AppContextType {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within an AppProvider");
+  }
+  return context;
+}
