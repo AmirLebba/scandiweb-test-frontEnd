@@ -3,15 +3,9 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import "@styles/ProductPage.scss";
 import { GET_PRODUCT } from "@graphql/queries";
-import { Product, Attribute } from "@interfaces/interfaces";
+import {  Attribute,ProductPageProps } from "@interfaces/interfaces";
 
-interface ProductPageProps {
-  onAddToCart: (
-    product: Product,
-    selectedAttributes: { [key: string]: string }
-  ) => void;
-  setCartOpen: (state: boolean) => void; 
-}
+
 
 export default function ProductPage({ onAddToCart, setCartOpen }: ProductPageProps ) {
   const { id } = useParams<{ id: string }>();
@@ -52,7 +46,7 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
 
   return (
     <div className="product-modal">
-      {/* ✅ Product Gallery */}
+      {/*  Product Gallery */}
       <div className="product-gallery" data-testid="product-gallery">
         <div className="gallery-thumbnails">
           {product.gallery.map((image: string, index: number) => (
@@ -95,7 +89,7 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
         </div>
       </div>
 
-      {/* ✅ Product Details */}
+      {/*  Product Details */}
       <div className="product-details">
         <h2>{product.name}</h2>
         {product.attributes.map((attribute: Attribute) => (
@@ -145,13 +139,13 @@ export default function ProductPage({ onAddToCart, setCartOpen }: ProductPagePro
           disabled={!isAllAttributesSelected || !product.inStock}
           onClick={() => {
             onAddToCart(product, selectedAttributes);
-            setCartOpen(true); // ✅ Open the cart after adding an item
+            setCartOpen(true); //  Open the cart after adding an item
           }}
         >
           Add to Cart
         </button>
 
-        {/* ✅ Product Description */}
+        {/*  Product Description */}
         <div className="product-description" data-testid="product-description">
           {product.description
             .split("\n")

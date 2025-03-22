@@ -38,8 +38,8 @@ const handlePlaceOrder = async () => {
 
     if (data?.placeOrder?.success) {
       alert("Order placed successfully!");
-      setCart([]); // ✅ Clear cart after order
-      setCartOpen(false); // ✅ Close cart after order
+      setCart([]); //  Clear cart after order
+      setCartOpen(false); //  Close cart after order
     } else {
       alert("Failed to place order: " + data?.placeOrder?.message);
     }
@@ -233,7 +233,7 @@ const handlePlaceOrder = async () => {
                       .toFixed(2)}
                   </span>
                 </div>
-                {/* ✅ Place Order Button */}
+                {/*  Place Order Button */}
                 <button
                   className="place-order"
                   onClick={handlePlaceOrder}

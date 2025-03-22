@@ -6,7 +6,7 @@ export const GET_PRODUCTS = gql`
       id
       name
       inStock
-      description
+
       brand
       prices {
         amount
@@ -63,8 +63,6 @@ export const GET_CATEGORIES = gql`
     categories {
       id
       name
-    }   
+    }
   }
 `;
-
-

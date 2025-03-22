@@ -68,10 +68,10 @@ export default function App() {
     setCart((prevCart) => {
       const updatedCart = [...prevCart];
 
-      // ✅ Decrease quantity
+      //  Decrease quantity
       updatedCart[index].quantity += change;
 
-      // ✅ Remove item if quantity is 0
+      //  Remove item if quantity is 0
       if (updatedCart[index].quantity <= 0) {
         updatedCart.splice(index, 1); // Remove the item from cart
       }
@@ -93,13 +93,13 @@ export default function App() {
           <g
             fill="none"
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
           >
             <path
-              stroke-dasharray="16"
-              stroke-dashoffset="16"
+              strokeDasharray="16"
+              strokeDashoffset="16"
               d="M12 3c4.97 0 9 4.03 9 9"
             >
               <animate
@@ -117,9 +117,9 @@ export default function App() {
               />
             </path>
             <path
-              stroke-dasharray="64"
-              stroke-dashoffset="64"
-              stroke-opacity="0.3"
+              strokeDasharray="64"
+              strokeDashoffset="64"
+              strokeOpacity="0.3"
               d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
             >
               <animate
@@ -144,15 +144,15 @@ export default function App() {
         >
           <g
             fill="currentColor"
-            fill-opacity="0"
+            fillOpacity="0"
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
           >
             <path
-              stroke-dasharray="64"
-              stroke-dashoffset="64"
+              strokeDasharray="64"
+              strokeDashoffset="64"
               d="M12 3l9 17h-18l9 -17Z"
             >
               <animate
@@ -162,7 +162,7 @@ export default function App() {
                 values="64;0"
               />
             </path>
-            <path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10v4">
+            <path strokeDasharray="6" strokeDashoffset="6" d="M12 10v4">
               <animate
                 fill="freeze"
                 attributeName="stroke-dashoffset"
@@ -179,7 +179,7 @@ export default function App() {
                 values="2;3;3;2;2"
               />
             </path>
-            <path stroke-dasharray="2" stroke-dashoffset="2" d="M12 17v0.01">
+            <path strokeDasharray="2" strokeDashoffset="2" d="M12 17v0.01">
               <animate
                 fill="freeze"
                 attributeName="stroke-dashoffset"
@@ -204,7 +204,7 @@ export default function App() {
               values="0;0.3"
             />
           </g>
-        </svg>{" "}
+        </svg>
         {categoriesError.message}
       </p>
     );
@@ -250,6 +250,7 @@ export default function App() {
                 <ProductPage
                   onAddToCart={handleAddToCart}
                   setCartOpen={setCartOpen}
+                  
                 />
               }
             />

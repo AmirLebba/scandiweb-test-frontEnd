@@ -60,14 +60,11 @@ export default interface NavbarProps {
 }
 
 export interface ProductPageProps {
-  product: Product;
-  selectedAttributes: { [key: string]: string };
-  isAllAttributesSelected: boolean;
-  handleAttributeSelect: (name: string, value: string) => void;
   onAddToCart: (
     product: Product,
     selectedAttributes: { [key: string]: string }
   ) => void;
+  setCartOpen: (state: boolean) => void;
 }
 
 export interface Category {

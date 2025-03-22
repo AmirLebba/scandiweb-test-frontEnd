@@ -26,69 +26,72 @@ export const ProductGridItem: React.FC<ProductGridItemProps> = ({
   // Handle Loading & Errors
   if (productsLoading)
     return (
-      <p className="loading">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-        >
-          <g fill="#5e5fe2">
-            <circle cx="12" cy="3.5" r="1.5">
-              <animateTransform
-                attributeName="transform"
-                calcMode="discrete"
-                dur="0.84s"
-                repeatCount="indefinite"
-                type="rotate"
-                values="0 12 12;90 12 12;180 12 12;270 12 12"
-              />
-              <animate
-                attributeName="opacity"
-                dur="0.21s"
-                repeatCount="indefinite"
-                values="1;1;0"
-              />
-            </circle>
-            <circle cx="12" cy="3.5" r="1.5" transform="rotate(30 12 12)">
-              <animateTransform
-                attributeName="transform"
-                begin="0.07s"
-                calcMode="discrete"
-                dur="0.84s"
-                repeatCount="indefinite"
-                type="rotate"
-                values="30 12 12;120 12 12;210 12 12;300 12 12"
-              />
-              <animate
-                attributeName="opacity"
-                begin="0.07s"
-                dur="0.21s"
-                repeatCount="indefinite"
-                values="1;1;0"
-              />
-            </circle>
-            <circle cx="12" cy="3.5" r="1.5" transform="rotate(60 12 12)">
-              <animateTransform
-                attributeName="transform"
-                begin="0.14s"
-                calcMode="discrete"
-                dur="0.84s"
-                repeatCount="indefinite"
-                type="rotate"
-                values="60 12 12;150 12 12;240 12 12;330 12 12"
-              />
-              <animate
-                attributeName="opacity"
-                begin="0.14s"
-                dur="0.21s"
-                repeatCount="indefinite"
-                values="1;1;0"
-              />
-            </circle>
-          </g>
-        </svg>
-      </p>
+      <div className="loading-container">
+        
+        <p className="loading-spinner">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+          >
+            <g fill="#5ece7b">
+              <circle cx="12" cy="3.5" r="1.5">
+                <animateTransform
+                  attributeName="transform"
+                  calcMode="discrete"
+                  dur="0.84s"
+                  repeatCount="indefinite"
+                  type="rotate"
+                  values="0 12 12;90 12 12;180 12 12;270 12 12"
+                />
+                <animate
+                  attributeName="opacity"
+                  dur="0.21s"
+                  repeatCount="indefinite"
+                  values="1;1;0"
+                />
+              </circle>
+              <circle cx="12" cy="3.5" r="1.5" transform="rotate(30 12 12)">
+                <animateTransform
+                  attributeName="transform"
+                  begin="0.07s"
+                  calcMode="discrete"
+                  dur="0.84s"
+                  repeatCount="indefinite"
+                  type="rotate"
+                  values="30 12 12;120 12 12;210 12 12;300 12 12"
+                />
+                <animate
+                  attributeName="opacity"
+                  begin="0.07s"
+                  dur="0.21s"
+                  repeatCount="indefinite"
+                  values="1;1;0"
+                />
+              </circle>
+              <circle cx="12" cy="3.5" r="1.5" transform="rotate(60 12 12)">
+                <animateTransform
+                  attributeName="transform"
+                  begin="0.14s"
+                  calcMode="discrete"
+                  dur="0.84s"
+                  repeatCount="indefinite"
+                  type="rotate"
+                  values="60 12 12;150 12 12;240 12 12;330 12 12"
+                />
+                <animate
+                  attributeName="opacity"
+                  begin="0.14s"
+                  dur="0.21s"
+                  repeatCount="indefinite"
+                  values="1;1;0"
+                />
+              </circle>
+            </g>
+          </svg>
+        </p>
+      </div>
     );
   if (productsError)
     return <p>Error fetching products: {productsError.message}</p>;
@@ -100,7 +103,8 @@ export const ProductGridItem: React.FC<ProductGridItemProps> = ({
       {products.map((product) => {
         // Handle Adding to Cart with Default Attributes
         const handleAddToCart = (event: React.MouseEvent) => {
-          event.preventDefault(); // Prevent navigation when clicking cart icon
+          event.preventDefault();
+          event.stopPropagation(); // Stops the event from bubbling up the DOM tree
           if (product.inStock) {
             const defaultAttributes: { [key: string]: string } = {};
             product.attributes.forEach((attr) => {
@@ -137,7 +141,10 @@ export const ProductGridItem: React.FC<ProductGridItemProps> = ({
 
               {/* Show "Add to Cart" icon only on hover and if the product is in stock */}
               {hoveredProductId === product.id && product.inStock && (
-                <div className="cart-checkmark" onClick={handleAddToCart}>
+                <div
+                  className="cart-checkmark"
+                  onClick={(event) => handleAddToCart(event)}
+                >
                   <svg
                     width="24"
                     height="22"
@@ -163,7 +170,10 @@ export const ProductGridItem: React.FC<ProductGridItemProps> = ({
 
               {/* Show "In Cart" indicator if the product is in the cart */}
               {isInCart(product.id) && (
-                <div className="cart-checkmark" onClick={handleAddToCart}>
+                <div
+                  className="cart-checkmark"
+                  onClick={(event) => handleAddToCart(event)}
+                >
                   <svg
                     width="24"
                     height="22"
