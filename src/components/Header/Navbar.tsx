@@ -1,86 +1,69 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useMutation } from "@apollo/client";
-import { Product } from "@interfaces/interfaces";
-import Logo from "@components/Header/Logo";
-import { PLACE_ORDER } from "@graphql/mutations";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+
+import { GET_CATEGORIES } from "@graphql/queries";
 import { useAppContext } from "@hooks/useAppContext";
+import { Category } from "@interfaces/interfaces";
+
+import DropDownCart from "./DropDownCart";
+
+import Logo from "@SVGs/Logo";
+import Cart from "@SVGs/Cart";
+
 import "@styles/Navbar.scss";
 
 export default function Navbar() {
-  const { cart, cartOpen, toggleCart, setSelectedCategory } = useAppContext();
-  const [placeOrder, { loading, error }] = useMutation(PLACE_ORDER);
+  const {
+    cart,
+    cartOpen,
+    toggleCart,
+    selectedCategory,
+    setSelectedCategory,
+    setCategories,
+    categories,
+  } = useAppContext();
   const navigate = useNavigate();
 
+  const { loading, error, data } = useQuery<{ categories: Category[] }>(
+    GET_CATEGORIES
+  );
+
   useEffect(() => {
-    document.body.classList.toggle("no-scroll", cartOpen);
-    return () => document.body.classList.remove("no-scroll");
-  }, [cartOpen]);
-
-  const handlePlaceOrder = async () => {
-    if (cart.length === 0) {
-      alert("Your cart is empty.");
-      return;
+    if (data?.categories && categories.length === 0) {
+      setCategories(data.categories);
+      setSelectedCategory(data.categories[0]?.id || 1);
     }
+  }, [data, categories.length, setCategories, setSelectedCategory]);
 
-    try {
-      const { data } = await placeOrder({
-        variables: {
-          items: cart.map((item: { product: Product }) => item.product.id),
-        },
-      });
-
-      if (data?.placeOrder?.success) {
-        alert("Order placed successfully!");
-      }
-    } catch {
-      alert("Error placing order. Please try again.");
-    }
-  };
+  if (loading) return <p></p>;
+  if (error) return <p>Error loading categories</p>;
 
   return (
     <nav className="navbar">
       <div className="navigation">
-        <button
-          onClick={() => {
-            setSelectedCategory(1);
-            navigate("/");
-          }}
-        >
-          All
-        </button>
-        <button
-          onClick={() => {
-            setSelectedCategory(2);
-            navigate("/");
-          }}
-        >
-          Clothes
-        </button>
-        <button
-          onClick={() => {
-            setSelectedCategory(3);
-            navigate("/");
-          }}
-        >
-          Tech
-        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => {
+              setSelectedCategory(cat.id);
+              navigate("/");
+            }}
+            className={selectedCategory === cat.id ? "active" : ""}
+          >
+            {cat.name}
+          </button>
+        ))}
       </div>
-      <Link to="/" className="logo">
+      <Link to="/" className="logo-container">
         <Logo />
       </Link>
-      <button className="cart-icon" onClick={toggleCart}>
-        🛒{" "}
+      <button data-testid="cart-btn" className="cart-icon" onClick={toggleCart}>
+        <Cart />
         {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
       </button>
 
-      {cartOpen && (
-        <button onClick={handlePlaceOrder} disabled={loading}>
-          {loading ? "Placing..." : "Place Order"}
-        </button>
-      )}
-
-      {error && <p className="error">Error: {error.message}</p>}
+      {cartOpen && <DropDownCart />}
     </nav>
   );
 }

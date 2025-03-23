@@ -1,7 +1,5 @@
-import { createContext,  useReducer, ReactNode } from "react";
+import { createContext, useReducer, ReactNode } from "react";
 import { Product } from "@interfaces/interfaces";
-
-
 
 interface CartItem {
   product: Product;
@@ -10,26 +8,38 @@ interface CartItem {
 }
 
 interface AppState {
-  cart: CartItem[]; 
+  cart: CartItem[];
   selectedCategory: number;
   cartOpen: boolean;
+  categories: Category[]; 
+}
+
+interface Category {
+  id: number;
+  name: string;
 }
 interface AppContextType {
-    cart: CartItem[];
-    selectedCategory: number;
-    cartOpen: boolean;
-    addToCart: (product: Product, selectedAttributes: { [key: string]: string }) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, change: number) => void;
-    setSelectedCategory: (categoryId: number) => void;
-    toggleCart: () => void;
-  }
+  cart: CartItem[];
+  selectedCategory: number;
+  cartOpen: boolean;
+  categories: Category[];
+  addToCart: (
+    product: Product,
+    selectedAttributes: { [key: string]: string }
+  ) => void;
+  removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, change: number) => void;
+  setSelectedCategory: (categoryId: number) => void;
+  toggleCart: () => void;
+  setCategories: (categories: Category[]) => void;
+}
 
 // Initial State
 const initialState: AppState = {
   cart: [],
   selectedCategory: 1,
   cartOpen: false,
+  categories: [],
 };
 
 // Actions
@@ -43,6 +53,7 @@ type Action =
     }
   | { type: "REMOVE_FROM_CART"; payload: string }
   | { type: "UPDATE_QUANTITY"; payload: { productId: string; change: number } }
+  | { type: "SET_CATEGORIES"; payload: Category[] }
   | { type: "SET_SELECTED_CATEGORY"; payload: number }
   | { type: "TOGGLE_CART" };
 
@@ -94,6 +105,9 @@ function appReducer(state: AppState, action: Action): AppState {
     case "TOGGLE_CART":
       return { ...state, cartOpen: !state.cartOpen };
 
+    case "SET_CATEGORIES":
+      return { ...state, categories: action.payload };
+
     default:
       return state;
   }
@@ -129,26 +143,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const toggleCart = () => {
     dispatch({ type: "TOGGLE_CART" });
   };
+  const setCategories = (categories: Category[]) => {
+    dispatch({ type: "SET_CATEGORIES", payload: categories });
+  };
+  
 
   return (
     <AppContext.Provider
       value={{
         cart: state.cart,
         selectedCategory: state.selectedCategory,
+        categories: state.categories, 
         cartOpen: state.cartOpen,
         addToCart,
         removeFromCart,
         updateQuantity,
         setSelectedCategory,
         toggleCart,
+        setCategories, 
       }}
     >
       {children}
     </AppContext.Provider>
   );
 }
-
-
 
 export { AppContext };
 export type { AppContextType };

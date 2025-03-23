@@ -7,7 +7,7 @@ import { useAppContext } from "@hooks/useAppContext";
 import "@styles/App.scss";
 
 export default function App() {
-  const { selectedCategory, cartOpen } = useAppContext();
+  const { cartOpen } = useAppContext(); 
 
   return (
     <Router>
@@ -17,10 +17,7 @@ export default function App() {
         </header>
         <main>
           <Routes>
-            <Route
-              path="/"
-              element={<ProductGridItem selectedCategory={selectedCategory} />}
-            />
+            <Route path="/" element={<ProductGridItem />} /> 
             <Route path="/product/:id" element={<ProductPage />} />
           </Routes>
         </main>
