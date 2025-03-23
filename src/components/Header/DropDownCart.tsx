@@ -48,7 +48,7 @@ export default forwardRef<HTMLDivElement>(function DropDownCart(_, ref) {
       )}
 
       <div className="cart-footer">
-        <div className="total" data-testid="cart-total">
+        <div className="total" data-testid="cart-total"> 
           <span>Total </span>
           <span id="amount" className="amount">
             $

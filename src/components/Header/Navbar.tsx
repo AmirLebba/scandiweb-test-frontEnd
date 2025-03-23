@@ -43,7 +43,8 @@ export default function Navbar() {
       if (
         cartOpen &&
         cartRef.current &&
-        !cartRef.current.contains(event.target as Node)
+        !cartRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest(".cart-icon")
       ) {
         toggleCart();
       }
@@ -62,6 +63,11 @@ export default function Navbar() {
         {categories.map((cat) => (
           <button
             key={cat.id}
+            data-testid={
+              selectedCategory === cat.id
+                ? "active-category-link"
+                : "category-link"
+            } 
             onClick={() => {
               setSelectedCategory(cat.id);
               navigate("/");
@@ -75,16 +81,19 @@ export default function Navbar() {
       <Link to="/" className="logo-container">
         <Logo />
       </Link>
-      <button data-testid="cart-btn" className="cart-icon" onClick={toggleCart}>
+      <button
+        data-testid="cart-btn"
+        className="cart-icon"
+        onClick={(event) => {
+          event.stopPropagation();
+          toggleCart();
+        }}
+      >
         <Cart />
         {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
       </button>
 
-      {cartOpen && (
-        
-          <DropDownCart ref={cartRef} />
-      
-      )}
+      {cartOpen && <DropDownCart ref={cartRef} />}
     </nav>
   );
 }

@@ -21,6 +21,7 @@ export const ProductGridItem = () => {
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     variables: selectedCategory === 1 ? {} : { categoryId: selectedCategory },
   });
+
   const isInCart = (productId: string) =>
     cart.some((item) => item.product.id === productId);
 
@@ -55,49 +56,54 @@ export const ProductGridItem = () => {
     <>
       <h1>{activeCategoryName}</h1>
       <div className="products-grid">
-        {products.map((product) => (
-          <Link
-            key={product.id}
-            to={`/product/${product.id}`}
-            className="product-card"
-            onMouseEnter={() => setHoveredProductId(product.id)}
-            onMouseLeave={() => setHoveredProductId(null)}
-          >
-            <div className="image-container">
-              <img
-                src={product.gallery[0]}
-                alt={product.name}
-                className={!product.inStock ? "out-of-stock" : ""}
-              />
-              {!product.inStock && (
-                <div className="stock-overlay">Out of Stock</div>
-              )}
-              {hoveredProductId === product.id && product.inStock && (
-                <button
-                  className="cart-checkmark"
-                  onClick={(event) => handleAddToCart(event, product)}
-                >
-                  <QuickShop />
-                </button>
-              )}
-              {isInCart(product.id) && (
-                <button
-                  className="cart-checkmark"
-                  onClick={(event) => handleAddToCart(event, product)}
-                >
-                  <QuickShop />
-                </button>
-              )}
-            </div>
-            <div className="product-info">
-              <h3>{product.name}</h3>
-              <p>
-                {product.prices[0].currency.symbol}
-                {product.prices[0].amount.toFixed(2)}
-              </p>
-            </div>
-          </Link>
-        ))}
+        {products.map((product) => {
+          const productNameKebab = product.name.toLowerCase().replace(/\s+/g, "-"); 
+
+          return (
+            <Link
+              key={product.id}
+              to={`/product/${product.id}`}
+              className="product-card"
+              onMouseEnter={() => setHoveredProductId(product.id)}
+              onMouseLeave={() => setHoveredProductId(null)}
+              data-testid={`product-${productNameKebab}`} 
+            >
+              <div className="image-container">
+                <img
+                  src={product.gallery[0]}
+                  alt={product.name}
+                  className={!product.inStock ? "out-of-stock" : ""}
+                />
+                {!product.inStock && (
+                  <div className="stock-overlay">Out of Stock</div>
+                )}
+                {hoveredProductId === product.id && product.inStock && (
+                  <button
+                    className="cart-checkmark"
+                    onClick={(event) => handleAddToCart(event, product)}
+                  >
+                    <QuickShop />
+                  </button>
+                )}
+                {isInCart(product.id) && (
+                  <button
+                    className="cart-checkmark"
+                    onClick={(event) => handleAddToCart(event, product)}
+                  >
+                    <QuickShop />
+                  </button>
+                )}
+              </div>
+              <div className="product-info">
+                <h3>{product.name}</h3>
+                <p>
+                  {product.prices[0].currency.symbol}
+                  {product.prices[0].amount.toFixed(2)}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </>
   );

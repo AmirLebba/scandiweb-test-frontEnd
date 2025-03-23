@@ -18,20 +18,20 @@ export default function CartItemList({ cart, updateQuantity }: CartItemListProps
             </p>
 
             {item.product.attributes.map((attr) => {
-              const uniqueItems = Array.from(
-                new Map(attr.items.map((item) => [item.value, item])).values()
-              );
-
+              const attributeNameKebab = attr.name.toLowerCase().replace(/\s+/g, "-"); 
+              
               return (
                 <div
                   key={attr.name}
                   className="attribute-group"
-                  data-testid={`cart-item-attribute-${attr.name.toLowerCase().replace(/\s+/g, "-")}`}
+                  data-testid={`cart-item-attribute-${attributeNameKebab}`} 
                 >
                   <p className="attribute-label">{attr.name}:</p>
                   <div className="attribute-options">
-                    {uniqueItems.map((option) => {
+                    {attr.items.map((option) => {
                       const isSelected = item.selectedAttributes[attr.name] === option.value;
+                      const optionNameKebab = option.value.toLowerCase().replace(/\s+/g, "-"); 
+
                       return (
                         <button
                           key={option.id}
@@ -39,11 +39,7 @@ export default function CartItemList({ cart, updateQuantity }: CartItemListProps
                             attr.type === "swatch" ? "swatch-option" : "text-option"
                           } ${isSelected ? "selected" : ""}`}
                           style={attr.type === "swatch" ? { backgroundColor: option.value } : {}}
-                          data-testid={`cart-item-attribute-${attr.name
-                            .toLowerCase()
-                            .replace(/\s+/g, "-")}-${option.value
-                            .toLowerCase()
-                            .replace(/\s+/g, "-")}${isSelected ? "-selected" : ""}`}
+                          data-testid={`cart-item-attribute-${attributeNameKebab}-${optionNameKebab}${isSelected ? "-selected" : ""}`} 
                         >
                           {attr.type === "swatch" ? "" : option.displayValue}
                         </button>
@@ -58,14 +54,14 @@ export default function CartItemList({ cart, updateQuantity }: CartItemListProps
           <div className="cart-item-quantity">
             <button
               onClick={() => updateQuantity(item.product.id, 1)} 
-              data-testid="cart-item-amount-increase"
+              data-testid="cart-item-amount-increase" 
             >
               +
             </button>
-            <span data-testid="cart-item-amount">{item.quantity}</span>
+            <span data-testid="cart-item-amount">{item.quantity}</span> 
             <button
               onClick={() => updateQuantity(item.product.id, -1)} 
-              data-testid="cart-item-amount-decrease"
+              data-testid="cart-item-amount-decrease" 
             >
               -
             </button>

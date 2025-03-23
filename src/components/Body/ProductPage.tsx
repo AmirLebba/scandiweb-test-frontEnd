@@ -25,6 +25,7 @@ export default function ProductPage() {
 
   return (
     <div className="product-modal">
+     
       <div className="product-gallery" data-testid="product-gallery">
         <div className="gallery-thumbnails">
           {data.product.gallery?.map((image: string, index: number) => (

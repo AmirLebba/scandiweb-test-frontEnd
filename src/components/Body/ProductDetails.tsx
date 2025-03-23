@@ -26,35 +26,42 @@ export default function ProductDetails() {
     <div className="product-details">
       <h2>{product.name}</h2>
 
-      {product.attributes.map((attribute: Attribute) => (
-        <div key={attribute.name} className="attribute-group">
-          <h4>{attribute.name}:</h4>
-          <div className="attribute-options">
-            {attribute.items.map((item) => {
-              const isSelected = selectedAttributes[attribute.name] === item.value;
-              return (
-                <button
-                  key={item.id}
-                  className={`attribute-option ${isSelected ? "selected" : ""}`}
-                  style={
-                    attribute.type === "swatch"
-                      ? { backgroundColor: item.value }
-                      : {}
-                  }
-                  onClick={() =>
-                    setSelectedAttributes((prev: Record<string, string>) => ({
-                      ...prev,
-                      [attribute.name]: item.value,
-                    }))
-                  }
-                >
-                  {attribute.type !== "swatch" ? item.displayValue : ""}
-                </button>
-              );
-            })}
+      {product.attributes.map((attribute: Attribute) => {
+        const attributeKebabCase = attribute.name.toLowerCase().replace(/\s+/g, "-"); 
+        return (
+          <div 
+            key={attribute.name} 
+            className="attribute-group"
+            data-testid={`product-attribute-${attributeKebabCase}`} 
+          >
+            <h4>{attribute.name}:</h4>
+            <div className="attribute-options">
+              {attribute.items.map((item) => {
+                const isSelected = selectedAttributes[attribute.name] === item.value;
+                return (
+                  <button
+                    key={item.id}
+                    className={`attribute-option ${isSelected ? "selected" : ""}`}
+                    style={
+                      attribute.type === "swatch"
+                        ? { backgroundColor: item.value }
+                        : {}
+                    }
+                    onClick={() =>
+                      setSelectedAttributes((prev) => ({
+                        ...prev,
+                        [attribute.name]: item.value,
+                      }))
+                    }
+                  >
+                    {attribute.type !== "swatch" ? item.displayValue : ""}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       <div className="price">
         <h4>Price:</h4>
@@ -64,15 +71,18 @@ export default function ProductDetails() {
         </p>
       </div>
 
+     
       <button
         className="add-to-cart-button"
+        data-testid="add-to-cart"
         onClick={() => addToCart(product, selectedAttributes)}
         disabled={!isAllAttributesSelected || !product.inStock}
       >
         {product.inStock ? "Add to Cart" : "Out of Stock"}
       </button>
 
-      <div className="product-description">
+      
+      <div className="product-description" data-testid="product-description">
         {product.description.split("\n").map((line, index) => (
           <p key={index}>{line}</p>
         ))}
