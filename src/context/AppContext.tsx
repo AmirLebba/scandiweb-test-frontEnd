@@ -1,38 +1,5 @@
-import { createContext, useReducer, ReactNode } from "react";
-import { Product } from "@interfaces/interfaces";
-
-interface CartItem {
-  product: Product;
-  quantity: number;
-  selectedAttributes: { [key: string]: string };
-}
-
-interface AppState {
-  cart: CartItem[];
-  selectedCategory: number;
-  cartOpen: boolean;
-  categories: Category[]; 
-}
-
-interface Category {
-  id: number;
-  name: string;
-}
-interface AppContextType {
-  cart: CartItem[];
-  selectedCategory: number;
-  cartOpen: boolean;
-  categories: Category[];
-  addToCart: (
-    product: Product,
-    selectedAttributes: { [key: string]: string }
-  ) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, change: number) => void;
-  setSelectedCategory: (categoryId: number) => void;
-  toggleCart: () => void;
-  setCategories: (categories: Category[]) => void;
-}
+import { createContext, useReducer, useState, ReactNode } from "react";
+import { Product, Category, AppState, AppContextType } from "@interfaces/interfaces";
 
 // Initial State
 const initialState: AppState = {
@@ -44,13 +11,7 @@ const initialState: AppState = {
 
 // Actions
 type Action =
-  | {
-      type: "ADD_TO_CART";
-      payload: {
-        product: Product;
-        selectedAttributes: { [key: string]: string };
-      };
-    }
+  | { type: "ADD_TO_CART"; payload: { product: Product; selectedAttributes: Record<string, string> } }
   | { type: "REMOVE_FROM_CART"; payload: string }
   | { type: "UPDATE_QUANTITY"; payload: { productId: string; change: number } }
   | { type: "SET_CATEGORIES"; payload: Category[] }
@@ -65,27 +26,24 @@ function appReducer(state: AppState, action: Action): AppState {
       const existingItemIndex = state.cart.findIndex(
         (item) =>
           item.product.id === product.id &&
-          JSON.stringify(item.selectedAttributes) ===
-            JSON.stringify(selectedAttributes)
+          JSON.stringify(item.selectedAttributes) === JSON.stringify(selectedAttributes)
       );
 
       if (existingItemIndex !== -1) {
         const updatedCart = [...state.cart];
         updatedCart[existingItemIndex].quantity += 1;
-        return { ...state, cart: updatedCart };
+        return { ...state, cart: updatedCart, cartOpen: true };
       }
 
       return {
         ...state,
         cart: [...state.cart, { product, quantity: 1, selectedAttributes }],
+        cartOpen: true, 
       };
     }
 
     case "REMOVE_FROM_CART":
-      return {
-        ...state,
-        cart: state.cart.filter((item) => item.product.id !== action.payload),
-      };
+      return { ...state, cart: state.cart.filter((item) => item.product.id !== action.payload) };
 
     case "UPDATE_QUANTITY":
       return {
@@ -96,7 +54,7 @@ function appReducer(state: AppState, action: Action): AppState {
               ? { ...item, quantity: item.quantity + action.payload.change }
               : item
           )
-          .filter((item) => item.quantity > 0),
+          .filter((item) => item.quantity > 0), 
       };
 
     case "SET_SELECTED_CATEGORY":
@@ -113,19 +71,17 @@ function appReducer(state: AppState, action: Action): AppState {
   }
 }
 
-// Create Context
+
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Provider Component
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
+  const [selectedImage, setSelectedImage] = useState<string>("");
 
-  const addToCart = (
-    product: Product,
-    selectedAttributes: { [key: string]: string }
-  ) => {
+  const addToCart = (product: Product, selectedAttributes: Record<string, string>) => {
     dispatch({ type: "ADD_TO_CART", payload: { product, selectedAttributes } });
-    dispatch({ type: "TOGGLE_CART" });
   };
 
   const removeFromCart = (productId: string) => {
@@ -143,24 +99,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const toggleCart = () => {
     dispatch({ type: "TOGGLE_CART" });
   };
+
   const setCategories = (categories: Category[]) => {
     dispatch({ type: "SET_CATEGORIES", payload: categories });
   };
-  
 
   return (
     <AppContext.Provider
       value={{
-        cart: state.cart,
-        selectedCategory: state.selectedCategory,
-        categories: state.categories, 
-        cartOpen: state.cartOpen,
+        ...state,
         addToCart,
         removeFromCart,
         updateQuantity,
         setSelectedCategory,
         toggleCart,
-        setCategories, 
+        setCategories,
+        selectedAttributes,
+        setSelectedAttributes,
+        selectedImage,
+        setSelectedImage,
       }}
     >
       {children}

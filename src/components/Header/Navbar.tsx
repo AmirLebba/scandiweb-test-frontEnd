@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
@@ -29,12 +29,29 @@ export default function Navbar() {
     GET_CATEGORIES
   );
 
+  const cartRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (data?.categories && categories.length === 0) {
       setCategories(data.categories);
       setSelectedCategory(data.categories[0]?.id || 1);
     }
   }, [data, categories.length, setCategories, setSelectedCategory]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        cartOpen &&
+        cartRef.current &&
+        !cartRef.current.contains(event.target as Node)
+      ) {
+        toggleCart();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [cartOpen, toggleCart]);
 
   if (loading) return <p></p>;
   if (error) return <p>Error loading categories</p>;
@@ -63,7 +80,11 @@ export default function Navbar() {
         {cart.length > 0 && <span className="cart-count">{cart.length}</span>}
       </button>
 
-      {cartOpen && <DropDownCart />}
+      {cartOpen && (
+        
+          <DropDownCart ref={cartRef} />
+      
+      )}
     </nav>
   );
 }

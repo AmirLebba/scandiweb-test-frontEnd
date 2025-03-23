@@ -1,13 +1,15 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import { useAppContext } from "@hooks/useAppContext";
+
 import Navbar from "@components/Header/Navbar";
 import { ProductGridItem } from "@components/Body/ProductGridItem";
 import ProductPage from "@components/Body/ProductPage";
-import { useAppContext } from "@hooks/useAppContext";
 
 import "@styles/App.scss";
 
 export default function App() {
-  const { cartOpen } = useAppContext(); 
+  const { cartOpen } = useAppContext();
 
   return (
     <Router>
@@ -17,7 +19,7 @@ export default function App() {
         </header>
         <main>
           <Routes>
-            <Route path="/" element={<ProductGridItem />} /> 
+            <Route path="/" element={<ProductGridItem />} />
             <Route path="/product/:id" element={<ProductPage />} />
           </Routes>
         </main>
