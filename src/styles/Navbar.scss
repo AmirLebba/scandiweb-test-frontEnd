@@ -8,7 +8,7 @@
   display: flex;
   place-self: center;
   align-items: center;
-  justify-content: space-between; // ✅ Space out left and right elements
+  justify-content: space-between;
   position: fixed;
   top: 0;
   right: 0;
@@ -20,8 +20,8 @@
     gap: 20px;
     align-items: center;
 
-    button {
-      height: 56px;
+    a {
+      height: 35px;
       padding: 0 20px;
       text-transform: uppercase;
       font-family: var(--font-family);
@@ -31,6 +31,7 @@
       background: none;
       border: none;
       cursor: pointer;
+      text-decoration: none;
 
       
       &.active {

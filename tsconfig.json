@@ -15,6 +15,7 @@
       "@context/*": ["context/*"],
       "@SVGs/*": ["SVGs/*"],
       "@api/*": ["api/*"],
+      "@pages/*": ["pages/*"]
     }
   }
 }

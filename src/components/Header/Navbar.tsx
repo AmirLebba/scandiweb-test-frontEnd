@@ -61,21 +61,23 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navigation">
         {categories.map((cat) => (
-          <button
+          <a
             key={cat.id}
+            href={`/${cat.name.toLowerCase()}`} 
             data-testid={
               selectedCategory === cat.id
                 ? "active-category-link"
                 : "category-link"
-            } 
-            onClick={() => {
+            }
+            onClick={(e) => {
+              e.preventDefault();
               setSelectedCategory(cat.id);
-              navigate("/");
+              navigate(`/${cat.name.toLowerCase()}`);
             }}
             className={selectedCategory === cat.id ? "active" : ""}
           >
             {cat.name}
-          </button>
+          </a>
         ))}
       </div>
       <Link to="/" className="logo-container">

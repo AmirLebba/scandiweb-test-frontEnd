@@ -6,7 +6,7 @@ import {
   AppContextType,
 } from "@interfaces/interfaces";
 
-// Initial State
+
 const initialState: AppState = {
   cart: [],
   selectedCategory: 1,
@@ -14,7 +14,7 @@ const initialState: AppState = {
   categories: [],
 };
 
-// Actions
+
 type Action =
   | {
       type: "ADD_TO_CART";
@@ -26,7 +26,7 @@ type Action =
   | { type: "SET_SELECTED_CATEGORY"; payload: number }
   | { type: "TOGGLE_CART" };
 
-// Reducer Function
+
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case "ADD_TO_CART": {

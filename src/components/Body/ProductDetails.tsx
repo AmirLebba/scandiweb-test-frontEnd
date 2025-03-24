@@ -27,21 +27,33 @@ export default function ProductDetails() {
       <h2>{product.name}</h2>
 
       {product.attributes.map((attribute: Attribute) => {
-        const attributeKebabCase = attribute.name.toLowerCase().replace(/\s+/g, "-"); 
+        const attributeKebabCase = attribute.name
+          .toLowerCase()
+          .replace(/\s+/g, "-");
+
         return (
-          <div 
-            key={attribute.name} 
+          <div
+            key={attribute.name}
             className="attribute-group"
-            data-testid={`product-attribute-${attributeKebabCase}`} 
+            data-testid={`product-attribute-${attributeKebabCase}`}
           >
             <h4>{attribute.name}:</h4>
             <div className="attribute-options">
               {attribute.items.map((item) => {
-                const isSelected = selectedAttributes[attribute.name] === item.value;
+                const isSelected =
+                  selectedAttributes[attribute.name] === item.value;
+
+               
+                const itemTestId = item.value.startsWith("#")
+                  ? item.value 
+                  : item.value.replace(/\s+/g, "-"); 
+
                 return (
                   <button
                     key={item.id}
-                    className={`attribute-option ${isSelected ? "selected" : ""}`}
+                    className={`attribute-option ${
+                      isSelected ? "selected" : ""
+                    }`}
                     style={
                       attribute.type === "swatch"
                         ? { backgroundColor: item.value }
@@ -53,6 +65,9 @@ export default function ProductDetails() {
                         [attribute.name]: item.value,
                       }))
                     }
+                    data-testid={`product-attribute-${attributeKebabCase}-${itemTestId}${
+                      isSelected ? "-selected" : ""
+                    }`}
                   >
                     {attribute.type !== "swatch" ? item.displayValue : ""}
                   </button>
@@ -71,7 +86,6 @@ export default function ProductDetails() {
         </p>
       </div>
 
-     
       <button
         className="add-to-cart-button"
         data-testid="add-to-cart"
@@ -81,7 +95,6 @@ export default function ProductDetails() {
         {product.inStock ? "Add to Cart" : "Out of Stock"}
       </button>
 
-      
       <div className="product-description" data-testid="product-description">
         {product.description.split("\n").map((line, index) => (
           <p key={index}>{line}</p>

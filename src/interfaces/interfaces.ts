@@ -113,3 +113,8 @@ export interface AppContextType {
     React.SetStateAction<Record<string, string>>
   >;
 }
+
+export interface CartItemListProps {
+  cart: CartItem[];
+  updateQuantity: (productId: string, change: number) => void;
+}

@@ -17,11 +17,7 @@ body {
   padding: 0 20px;
   min-height: 100vh;
   background: #f8f9fa;
-  
-  main{
-    padding-top: 100px;
-    overflow: hidden;
-  }
+
   .overlay {
     position: fixed;
     top: 80px;
@@ -32,6 +28,11 @@ body {
     opacity: 88%;
     z-index: 1;
   }
+  main {
+    padding-top: 100px;
+    overflow: hidden;
+  }
+
   h1 {
     font-size: 42px;
     font-family: var(--font-family);
@@ -44,6 +45,7 @@ body {
     max-height: 68px;
   }
 }
+
 .no-scroll {
   overflow: hidden;
   height: 100vh;
@@ -68,7 +70,6 @@ body {
   line-height: var(--line-height-base);
 }
 
-/* Adjust grid for smaller screens */
 @media (max-width: 600px) {
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
