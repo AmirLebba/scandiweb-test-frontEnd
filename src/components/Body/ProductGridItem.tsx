@@ -6,8 +6,8 @@ import { GET_PRODUCTS } from "@graphql/queries";
 import { Product } from "@interfaces/interfaces";
 import { useAppContext } from "@hooks/useAppContext";
 
-import QuickShop from "@SVGs/QuickShop";
-import Loading from "@SVGs/Loading";
+import QuickShop from "@components/SVGs/QuickShop";
+import Loading from "@components/SVGs/Loading";
 
 import "@styles/ProductGridItem.scss";
 
@@ -57,7 +57,9 @@ export const ProductGridItem = () => {
       <h1>{activeCategoryName}</h1>
       <div className="products-grid">
         {products.map((product) => {
-          const productNameKebab = product.name.toLowerCase().replace(/\s+/g, "-"); 
+          const productNameKebab = product.name
+            .toLowerCase()
+            .replace(/\s+/g, "-");
 
           return (
             <Link
@@ -66,7 +68,7 @@ export const ProductGridItem = () => {
               className="product-card"
               onMouseEnter={() => setHoveredProductId(product.id)}
               onMouseLeave={() => setHoveredProductId(null)}
-              data-testid={`product-${productNameKebab}`} 
+              data-testid={`product-${productNameKebab}`}
             >
               <div className="image-container">
                 <img

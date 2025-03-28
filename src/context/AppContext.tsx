@@ -6,7 +6,6 @@ import {
   AppContextType,
 } from "@interfaces/interfaces";
 
-
 const initialState: AppState = {
   cart: [],
   selectedCategory: 1,
@@ -14,8 +13,7 @@ const initialState: AppState = {
   categories: [],
 };
 
-
-type Action =
+export type Action =
   | {
       type: "ADD_TO_CART";
       payload: { product: Product; selectedAttributes: Record<string, string> };
@@ -24,8 +22,8 @@ type Action =
   | { type: "UPDATE_QUANTITY"; payload: { productId: string; change: number } }
   | { type: "SET_CATEGORIES"; payload: Category[] }
   | { type: "SET_SELECTED_CATEGORY"; payload: number }
-  | { type: "TOGGLE_CART" };
-
+  | { type: "TOGGLE_CART" }
+  | { type: "CLEAR_CART" };
 
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
@@ -78,6 +76,11 @@ function appReducer(state: AppState, action: Action): AppState {
     case "SET_CATEGORIES":
       return { ...state, categories: action.payload };
 
+    case "CLEAR_CART":
+      return {
+        ...state,
+        cart: [],
+      };
     default:
       return state;
   }
@@ -113,7 +116,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const toggleCart = () => {
     dispatch({ type: "TOGGLE_CART" });
-    console.log("Cart state after toggle:", state.cartOpen); 
+    console.log("Cart state after toggle:", state.cartOpen);
   };
 
   const setCategories = (categories: Category[]) => {
@@ -125,6 +128,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       value={{
         ...state,
         addToCart,
+        dispatch,
         removeFromCart,
         updateQuantity,
         setSelectedCategory,

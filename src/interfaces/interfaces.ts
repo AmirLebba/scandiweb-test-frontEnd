@@ -1,3 +1,29 @@
+import { Action } from "@context/AppContext";
+
+export interface AppContextType {
+  cart: CartItem[];
+  dispatch: React.Dispatch<Action>;
+  selectedCategory: number;
+  cartOpen: boolean;
+  categories: Category[];
+  addToCart: (
+    product: Product,
+    selectedAttributes: Record<string, string>
+  ) => void;
+  removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, change: number) => void;
+  setSelectedCategory: (categoryId: number) => void;
+  toggleCart: () => void;
+  setCategories: (categories: Category[]) => void;
+
+  selectedImage: string;
+  setSelectedImage: (image: string) => void;
+  selectedAttributes: Record<string, string>;
+  setSelectedAttributes: React.Dispatch<
+    React.SetStateAction<Record<string, string>>
+  >;
+}
+
 export interface Price {
   amount: number;
   currency: { label: string; symbol: string };
@@ -89,29 +115,6 @@ export interface AppState {
 export interface Category {
   id: number;
   name: string;
-}
-
-export interface AppContextType {
-  cart: CartItem[];
-  selectedCategory: number;
-  cartOpen: boolean;
-  categories: Category[];
-  addToCart: (
-    product: Product,
-    selectedAttributes: Record<string, string>
-  ) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, change: number) => void;
-  setSelectedCategory: (categoryId: number) => void;
-  toggleCart: () => void;
-  setCategories: (categories: Category[]) => void;
-
-  selectedImage: string;
-  setSelectedImage: (image: string) => void;
-  selectedAttributes: Record<string, string>;
-  setSelectedAttributes: React.Dispatch<
-    React.SetStateAction<Record<string, string>>
-  >;
 }
 
 export interface CartItemListProps {

@@ -8,8 +8,8 @@ import { Category } from "@interfaces/interfaces";
 
 import DropDownCart from "./DropDownCart";
 
-import Logo from "@SVGs/Logo";
-import Cart from "@SVGs/Cart";
+import Logo from "@components/SVGs/Logo";
+import Cart from "@components/SVGs/Cart";
 
 import "@styles/Navbar.scss";
 
@@ -63,7 +63,7 @@ export default function Navbar() {
         {categories.map((cat) => (
           <a
             key={cat.id}
-            href={`/${cat.name.toLowerCase()}`} 
+            href={`/${cat.name.toLowerCase()}`}
             data-testid={
               selectedCategory === cat.id
                 ? "active-category-link"

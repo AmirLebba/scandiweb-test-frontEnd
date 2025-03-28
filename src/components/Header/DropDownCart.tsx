@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { useAppContext } from "@hooks/useAppContext";
-import { useMutation } from "@apollo/client"; 
-import { PLACE_ORDER } from "@graphql/mutations"; 
+import { useMutation } from "@apollo/client";
+import { PLACE_ORDER } from "@graphql/mutations";
 
 import CartItemList from "./CartItemList";
 
@@ -9,6 +9,8 @@ import "@styles/DropDownCart.scss";
 
 export default forwardRef<HTMLDivElement>(function DropDownCart(_, ref) {
   const { cart, updateQuantity } = useAppContext();
+  const { dispatch } = useAppContext();
+
   const [placeOrder, { loading, error }] = useMutation(PLACE_ORDER);
 
   const handlePlaceOrder = async () => {
@@ -26,6 +28,8 @@ export default forwardRef<HTMLDivElement>(function DropDownCart(_, ref) {
 
       if (data?.placeOrder?.success) {
         alert("Order placed successfully!");
+
+        dispatch({ type: "CLEAR_CART" });
       } else {
         alert("Failed to place order.");
       }
@@ -35,7 +39,7 @@ export default forwardRef<HTMLDivElement>(function DropDownCart(_, ref) {
   };
 
   return (
-    <div ref={ref} className="cart-dropdown"> 
+    <div ref={ref} className="cart-dropdown">
       <h3>
         <span id="cart-title">My Bag, </span>
         <span id="cart-count">{cart.length} items</span>
@@ -48,7 +52,7 @@ export default forwardRef<HTMLDivElement>(function DropDownCart(_, ref) {
       )}
 
       <div className="cart-footer">
-        <div className="total" data-testid="cart-total"> 
+        <div className="total" data-testid="cart-total">
           <span>Total </span>
           <span id="amount" className="amount">
             $
@@ -62,7 +66,11 @@ export default forwardRef<HTMLDivElement>(function DropDownCart(_, ref) {
           </span>
         </div>
 
-        <button className="place-order" onClick={handlePlaceOrder} disabled={loading}>
+        <button
+          className="place-order"
+          onClick={handlePlaceOrder}
+          disabled={loading}
+        >
           {loading ? "Placing Order..." : "Place Order"}
         </button>
         {error && <p className="error">Error: {error.message}</p>}

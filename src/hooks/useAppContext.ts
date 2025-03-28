@@ -1,4 +1,3 @@
-// src/hooks/useAppContext.ts (NEW FILE)
 import { useContext } from "react";
 import { AppContext, AppContextType } from "@context/AppContext";
 
