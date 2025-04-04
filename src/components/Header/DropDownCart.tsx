@@ -30,6 +30,7 @@ export default forwardRef<HTMLDivElement>(function DropDownCart(_, ref) {
         alert("Order placed successfully!");
 
         dispatch({ type: "CLEAR_CART" });
+        localStorage.removeItem("cart"); 
       } else {
         alert("Failed to place order.");
       }

@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState, ReactNode } from "react";
+import { createContext, useReducer, useState, ReactNode, useEffect } from "react";
 import {
   Product,
   Category,
@@ -89,7 +89,13 @@ function appReducer(state: AppState, action: Action): AppState {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+  const [state, dispatch] = useReducer(appReducer, initialState, (initial) => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? { ...initial, cart: JSON.parse(savedCart) } : initial;
+  });
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(state.cart));
+  }, [state.cart]);
   const [selectedAttributes, setSelectedAttributes] = useState<
     Record<string, string>
   >({});
