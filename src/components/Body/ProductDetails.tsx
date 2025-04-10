@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
+import parse from "html-react-parser";
 
 import { GET_PRODUCT } from "@graphql/queries";
 import { useAppContext } from "@hooks/useAppContext";
@@ -43,10 +44,9 @@ export default function ProductDetails() {
                 const isSelected =
                   selectedAttributes[attribute.name] === item.value;
 
-               
                 const itemTestId = item.value.startsWith("#")
-                  ? item.value 
-                  : item.value.replace(/\s+/g, "-"); 
+                  ? item.value
+                  : item.value.replace(/\s+/g, "-");
 
                 return (
                   <button
@@ -96,9 +96,7 @@ export default function ProductDetails() {
       </button>
 
       <div className="product-description" data-testid="product-description">
-        {product.description.split("\n").map((line, index) => (
-          <p key={index}>{line}</p>
-        ))}
+        {parse(product.description)}
       </div>
     </div>
   );
