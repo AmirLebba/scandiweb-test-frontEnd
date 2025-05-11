@@ -1,10 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import parse from "html-react-parser";
+import DOMPurify from "dompurify";
 
 import { GET_PRODUCT } from "@graphql/queries";
 import { useAppContext } from "@hooks/useAppContext";
 import { Attribute, Product } from "@interfaces/interfaces";
+
+import Loading from "@components/SVGs/Loading";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +17,12 @@ export default function ProductDetails() {
     variables: { id },
   });
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <p className="loading">
+        <Loading />
+      </p>
+    );
   if (error || !data?.product) return <p>Error loading product</p>;
 
   const product = data.product;
@@ -96,7 +104,7 @@ export default function ProductDetails() {
       </button>
 
       <div className="product-description" data-testid="product-description">
-        {parse(product.description)}
+        {parse(DOMPurify.sanitize(product.description))}
       </div>
     </div>
   );
