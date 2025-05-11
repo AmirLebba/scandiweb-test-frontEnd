@@ -54,7 +54,7 @@ export const ProductGridItem = () => {
 
   return (
     <>
-      <h1>{activeCategoryName}</h1>
+      <h1 className="catigoryName">{activeCategoryName}</h1>
       <div className="products-grid">
         {products.map((product) => {
           const productNameKebab = product.name

@@ -39,6 +39,7 @@
   }
 
   .gallery-main {
+    
     position: relative;
     img {
       width: 575px;
@@ -104,7 +105,7 @@
         }
       }
 
-      // ✅ Special styling for color swatches
+      
       .attribute-option[style*="background-color"] {
         width: 32px;
         height: 32px;
@@ -116,7 +117,7 @@
       }
 
       .attribute-option.selected[style*="background-color"] {
-        border: 2px solid #5ece7b; // ✅ Green border when selected
+        border: 2px solid #5ece7b; 
       }
     }
 
@@ -178,6 +179,7 @@
     line-height: 1.5;
     overflow: auto;
     max-height: 200px;
+    
   }
 
   .close-modal {
