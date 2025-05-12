@@ -18,10 +18,17 @@ export default function App() {
         </header>
         <main>
           <Routes>
-            <Route path="/" element={<CategoryPage />} />
-            <Route path="/all" element={<CategoryPage />} />
-            <Route path="/clothes" element={<CategoryPage />} />
-            <Route path="/tech" element={<CategoryPage />} />
+            <Route path="/" element={<CategoryPage categoryName="all" />} />
+            <Route path="/all" element={<CategoryPage categoryName="all" />} />
+            <Route
+              path="/clothes"
+              element={<CategoryPage categoryName="clothes" />}
+            />
+            <Route
+              path="/tech"
+              element={<CategoryPage categoryName="tech" />}
+            />
+
             <Route path="/product/:id" element={<ProductPage />} />
           </Routes>
         </main>

@@ -122,7 +122,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const toggleCart = () => {
     dispatch({ type: "TOGGLE_CART" });
-    console.log("Cart state after toggle:", state.cartOpen);
+    
   };
 
   const setCategories = (categories: Category[]) => {
