@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
-
 import ProductDetails from "../components/Body/ProductDetails";
 import "@styles/ProductPage.scss";
 
 import { GET_PRODUCT } from "@graphql/queries";
 import { useAppContext } from "@hooks/useAppContext";
+
+import Loading from "@components/SVGs/Loading";
 
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,12 +23,16 @@ export default function ProductPage() {
     }
   }, [data, setSelectedImage, setSelectedAttributes]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <p className="loading">
+        <Loading />
+      </p>
+    );
   if (error || !data?.product) return <p>Error loading product</p>;
 
   return (
     <>
-      
       <div className="product-modal">
         <div className="product-gallery" data-testid="product-gallery">
           <div className="gallery-thumbnails">
